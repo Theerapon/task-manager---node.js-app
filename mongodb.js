@@ -14,6 +14,55 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true}, (error, client) => 
     }
     
     const db = client.db(databaseName)
+    // ---------------------------------DELETED --------------------------------
+    // db.collection('users').deleteMany({
+    //     name: 'Theerapon'   
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // db.collection('tasks').deleteOne({
+    //     description: "Pot plants",
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+
+    // ----------------------------------UPDATE----------------------------------
+    // db.collection('users').updateOne({
+    //     _id: new ObjectId('613ca26eb35555b6b349168b')
+    // }, {
+    //     $inc: {
+    //         age: 34
+    //     }
+
+    //     // $set: {
+    //     //     name: 'Potiwan',
+    //     // }
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // db.collection('tasks').updateMany({
+    //     complete: false,
+    // }, {
+    //     $set: { 
+    //         complete: true, 
+    //     }
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+
+    // --------------------------------READING--------------------------------
     // ------------------------Find one user------------------------
     // db.collection('users').findOne({
     //     _id: new ObjectId('613ca26eb35555b6b349168b')
@@ -45,26 +94,25 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true}, (error, client) => 
     // })
 
     // ------------------------Find one task------------------------
-    db.collection('tasks').findOne({
-        _id: new ObjectId('613c906af1cce609a5e83e35')
-    }, (error, result) => {
-        if (error) {
-            return console.log('Unable to find task: ' + error)
-        }
-        console.log(result)
-    })
+    // db.collection('tasks').findOne({
+    //     _id: new ObjectId('613c906af1cce609a5e83e35')
+    // }, (error, result) => {
+    //     if (error) {
+    //         return console.log('Unable to find task: ' + error)
+    //     }
+    //     console.log(result)
+    // })
 
-    // ------------------------Find many tasks------------------------
-    db.collection('tasks').find().toArray((error, result) => {
-        if (error) {
-            return console.log('Unable to find task: ' + error)
-        }
-        console.log(result)
-    })
+    // // ------------------------Find many tasks------------------------
+    // db.collection('tasks').find().toArray((error, result) => {
+    //     if (error) {
+    //         return console.log('Unable to find task: ' + error)
+    //     }
+    //     console.log(result)
+    // })
 
 
     // ------------------------INSERT------------------------------------------------
-
     // --------------------------insert one user collection--------------------------
     // db.collection('users').insertOne({
     //     name: 'Theerapon',
