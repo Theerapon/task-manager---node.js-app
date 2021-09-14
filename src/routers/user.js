@@ -1,5 +1,6 @@
 const express = require('express')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
@@ -13,7 +14,6 @@ router.post('/users', async (req, res) => {
         res.status(400).send(err)
     }
 
-
     // user.save().then(() => {
     //     res.status(201).send(user)
     // }).catch((error) => {
@@ -21,14 +21,17 @@ router.post('/users', async (req, res) => {
     // })
 })
 
-router.get('/users', async (req, res) => {
-    
-    try {
-        const users = await User.find()
-        res.status(200).send(users)
-    } catch (err) {
-        res.status(500).send()
-    }
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
+    // Async Version old method get all users ---------
+    // try {
+    //     const users = await User.find()
+    //     res.status(200).send(users)
+    // } catch (err) {
+    //     res.status(500).send()
+    // }
+
+    // Pormise Version old method get all users ---------
     // User.find({}).then((users) => {
     //     res.status(200).send(users)
     // }).catch((error) => {
