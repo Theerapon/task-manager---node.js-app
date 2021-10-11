@@ -13,30 +13,10 @@ router.post('/users', async (req, res) => {
     } catch (err) {
         res.status(400).send(err)
     }
-
-    // user.save().then(() => {
-    //     res.status(201).send(user)
-    // }).catch((error) => {
-    //     res.status(400).send(error)
-    // })
 })
 
 router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
-    // Async Version old method get all users ---------
-    // try {
-    //     const users = await User.find()
-    //     res.status(200).send(users)
-    // } catch (err) {
-    //     res.status(500).send()
-    // }
-
-    // Pormise Version old method get all users ---------
-    // User.find({}).then((users) => {
-    //     res.status(200).send(users)
-    // }).catch((error) => {
-    //     res.status(500).send()
-    // })
 })
 
 router.post('/users/login', async (req, res) => {
@@ -49,30 +29,30 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-router.get('/users/:id', async (req, res) => {
-    const _id = req.params.id
-    
+router.post('/users/logout', auth, async (req, res) => {
     try {
-        const user = await User.findById(_id)
-        if (!user) {
-            return res.status(404).send()
-        }
-        res.status(200).send(user)
-    } catch (err) {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch (error) {
         res.status(500).send()
     }
-    // User.findById(_id).then((user) => {
-    //     if (!user) {
-    //         return res.status(404).send()
-    //     }
-
-    //     res.status(200).send(user)
-    // }).catch((error) => {
-    //     res.status(500).send()
-    // })
 })
 
-router.patch('/users/:id', async (req, res) => {
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (error) {
+        res.status(500).send()
+    }
+})
+
+
+router.patch('/users/me', auth, async (req, res) => {
 
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
@@ -82,29 +62,19 @@ router.patch('/users/:id', async (req, res) => {
         return res.status(400).send({ error: 'Invalid updates'})
     }
 
-    const _id = req.params.id
     try {
-        const user = await User.findById(_id)
-        updates.forEach((update) => user[update] = req.body[update] )
-        await user.save()
-        // const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
-        if (!user) {
-            return res.status(404).send()
-        }
-        res.status(200).send(user)
+        updates.forEach((update) => req.user[update] = req.body[update] )
+        await req.user.save()
+        res.status(200).send()
     } catch (error) {
         res.status(400).send(error)
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
-    const _id = req.params.id
+router.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(_id)
-        if (!user) {
-            return res.status(404).send()
-        }
-        res.status(200).send(user)
+        await req.user.remove()
+        res.status(200).send(req.user)
     } catch (error) {
         res.status(500).send()
     }
